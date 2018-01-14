@@ -32,18 +32,16 @@ def create_settings_manager(key_generation_key_manager):
         salt = preference_manager.get_salt())
     return SettingsManager(preference_manager), preference_manager
 
-def get_domain(domain):
+def has_setting(domain):
     """
-    Loads the settings for the domain.
+    Returns the domain name and True if settings for the domain are stored.
     
     :param domain: the domain name
     :type domain: str
     """
-    settings_found = False
+    setting_found = False
     if domain in settings_manager.get_domain_list():
-        settings_found = True
-        if not args.quiet:
-            print('Loaded settings for "' + domain + '".')
+        setting_found = True
     else:
         for dom in settings_manager.get_domain_list():
             if dom[:len(domain)] == domain:
@@ -52,10 +50,8 @@ def get_domain(domain):
                 if answer not in ["n", "N", "no", "No", "NO", "not", "Not",
                     "NOT", "nay", "Nay", "NAY", "nein", "Nein", "NEIN"]:
                     domain = dom
-                    settings_found = True
-    if not settings_found:
-        print('For "' + domain + '" no settings were found.')
-    return settings_manager.get_setting(domain), settings_found
+                    setting_found = True
+    return domain, setting_found
 
 def get_username(setting, option):
     """
@@ -202,22 +198,27 @@ if __name__ == "__main__":
         domain = input("Enter a domain name or press Enter to quit: ")
         if domain == "":
             sys.exit(1)
-        setting, setting_found = get_domain(domain)
+        domain, setting_found = has_setting(domain)
         if args.quiet:
             if setting_found:
+                setting = settings_manager.get_setting(domain)
                 get_password(setting,
                     key_generation_key_manager.get_key_generation_key(),
                     option = "1")
         else:
             if setting_found:
+                setting = settings_manager.get_setting(domain)
+                print('Loaded settings for "' + domain + '".')
                 setting_menu(setting, key_generation_key_manager,
                     settings_manager)
             else:
+                print('For "' + domain + '" no settings were found.')
                 answer = input("Create a new domain? [y/n] ")
                 if answer in ["n", "N", "no", "No", "NO", "not", "Not", "NOT",
                     "nay", "Nay", "NAY", "nein", "Nein", "NEIN"]:
                     input("No domain was created. Press any key to continue.")
                 else:
+                    setting = settings_manager.get_setting(domain)
                     setting.new_domain()
                     settings_manager.set_setting(setting)
                     settings_manager.store_settings(key_generation_key_manager)
