@@ -195,7 +195,7 @@ if __name__ == "__main__":
         completer = AutoCompleter(settings_manager.get_domain_list())
         completer_delimiters = readline.get_completer_delims()
         completer_delimiters = completer_delimiters.translate(
-         {ord(character): None for character in " @"})
+         {ord(character): None for character in " @-"})
         readline.set_completer_delims(completer_delimiters)
         readline.set_completer(completer.complete)
         readline.parse_and_bind('tab: complete')
