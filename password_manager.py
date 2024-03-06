@@ -9,18 +9,17 @@ from preference_manager import PreferenceManager
 from key_generation_key_manager import KeyGenerationKeyManager
 from settings_manager import SettingsManager
 from auto_completer import AutoCompleter
-from base64 import b64decode
 from datetime import datetime
 import argparse
 import getpass
 import readline
 import sys
 import pyperclip
+from termcolor import colored
 
 def create_settings_manager(key_generation_key_manager):
     """
     Creates the settings manager.
-    
     :param key_generation_key_manager: the key generation key manager
     :type key_generation_key_manager: KeyGenerationKeyManager
     """
@@ -84,7 +83,8 @@ def get_fixed_password(setting, option):
         pyperclip.copy(setting.get_fixed_password())
         print("The password was copied to the clipboard.")
     else:
-        print("Fixed password: " + setting.get_fixed_password())
+        colored_password = color_password(setting.get_fixed_password())
+        print("Fixed password: " + colored_password)
 
 
 def get_generated_password(setting, key_generation_key, option):
@@ -106,8 +106,30 @@ def get_generated_password(setting, key_generation_key, option):
         pyperclip.copy(password)
         print("The password was copied to the clipboard.")
     else:
-        print("Generated password: " + password)
+        colored_password = color_password(password)
+        print("Generated password: " + colored_password)
 
+def color_password(password):
+    """
+    Colors the password before displaying. Digits are printed in blue,
+    lower-case letters in green, upper-case letters in red,
+    and special characters in yellow.
+        
+    :param password: the password to be colored
+    :type setting: string
+    """    
+    colored_password = ''
+    for char in password:
+        if char.isdigit():
+            colored_password += colored(char, 'blue')
+        elif char.islower():
+            colored_password += colored(char, 'green')
+        elif char.isupper():
+            colored_password += colored(char, 'red') 
+        else:
+            colored_password += colored(char, 'yellow')
+    return  colored_password
+        
 def get_password(setting, key_generation_key, option):
     """
     Copies the username and the password for the domain to the clipboard
