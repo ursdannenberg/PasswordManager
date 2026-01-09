@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "password_manager"
+authors = [
+    {name = "Urs Dannenberg", email = "ur.schaefer@live.de"},
+]
+version = "0.1.0"
+description = "PasswordManager is a secure password manager for the Unix shell."
+readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3",
+]
+requires-python = ">=3.14"
+dependencies = [
+    "pycrypto>=2.6.1",
+    "pyperclip>=1.11.0",
+    "termcolor>=3.3.0",
+]
+
+[project.scripts]
+password_manager = "password_manager.__main__:main"
