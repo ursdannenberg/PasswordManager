@@ -4,6 +4,6 @@ PasswordManager is a secure password manager for the Unix shell. PasswordManager
 * No version flag is used.
 
 Required Python modules:
-* [pycrypto](https://www.dlitz.net/software/pycrypto/)
+* [pycryptodome](https://www.pycryptodome.org)
 * [pyperclip](https://github.com/asweigart/pyperclip)
 * [termcolor](https://github.com/termcolor/termcolor)
